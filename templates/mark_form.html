@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if editing else 'Mark' }} Attendance — {{ subject.name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ 'Edit Attendance' if editing else "Mark Today's Attendance" }}</h1>
+    <p class="muted">{{ subject.name }} · <span class="badge badge-code">{{ subject.code }}</span></p>
+  </div>
+</div>
+
+<div class="card mark-card">
+  <form method="post">
+    {% if editing %}
+      <p class="date-line">Date: <strong>{{ session_date }}</strong></p>
+    {% else %}
+      <label class="date-line">Date
+        <input type="date" name="session_date" value="{{ session_date }}" required>
+      </label>
+    {% endif %}
+
+    <p class="hint">Everyone is marked <strong>present</strong> by default — just untick the absentees.</p>
+
+    <div class="student-list">
+      {% for st in students %}
+      <label class="student-row">
+        <input type="checkbox" name="present" value="{{ st.id }}"
+               {% if st.id in present_ids %}checked{% endif %}>
+        <span class="avatar">{{ st.name[0]|upper }}</span>
+        <span class="st-name">{{ st.name }}</span>
+        <span class="st-roll">{{ st.roll_no }}</span>
+        <span class="st-status {{ 'present' if st.id in present_ids else 'absent' }}"
+              data-present="Present" data-absent="Absent"></span>
+      </label>
+      {% endfor %}
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary btn-block">
+        {{ 'Save Changes' if editing else 'Save Attendance' }}
+      </button>
+      <a class="btn btn-outline btn-block" href="{{ url_for('subject_detail', subject_id=subject.id) }}">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.querySelectorAll('.student-row input').forEach(cb => {
+    const sync = () => {
+      const badge = cb.closest('.student-row').querySelector('.st-status');
+      badge.className = 'st-status ' + (cb.checked ? 'present' : 'absent');
+    };
+    cb.addEventListener('change', sync);
+    sync();
+  });
+</script>
+{% endblock %}

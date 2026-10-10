@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}My Attendance{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Welcome back, {{ session.name }}</h1>
+    <p class="muted">Your attendance across all enrolled subjects</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('enroll') }}">+ Enroll in Subject</a>
+</div>
+
+{% if cards %}
+<div class="grid-2">
+  {% for c in cards %}
+  <a class="card card-link subject-card" href="{{ url_for('student_subject', subject_id=c.subject.id) }}">
+    <div class="card-top">
+      <h2>{{ c.subject.name }}</h2>
+      <span class="badge badge-code">{{ c.subject.code }}</span>
+    </div>
+
+    <div class="big-pct {{ 'ok' if c.stats.status == 'safe' else ('warn' if c.stats.status == 'below' else 'bad') }}">
+      {{ c.stats.pct }}<span>%</span>
+    </div>
+    <div class="pct-bar big"><div class="pct-fill {{ 'ok' if c.stats.status == 'safe' else ('warn' if c.stats.status == 'below' else 'bad') }}" style="width: {{ [c.stats.pct, 100]|min }}%"></div></div>
+
+    <p class="muted">{{ c.stats.attended }} attended · {{ c.stats.absent }} absent · {{ c.stats.total }} classes held</p>
+
+    <div class="advisory {{ 'ok' if c.stats.status == 'safe' else ('warn' if c.stats.status == 'below' else 'bad') }}">
+      {% if c.stats.status == 'no_classes' %}
+        No classes held yet.
+      {% elif c.stats.status == 'safe' %}
+        You're above the {{ c.subject.min_attendance_pct|int }}% requirement — you can miss up to <strong>{{ c.stats.can_miss }}</strong> more class{{ 'es' if c.stats.can_miss != 1 }}.
+      {% elif c.stats.status == 'critical' %}
+        No attendance yet — attend the next class to start building your record.
+      {% else %}
+        Attend the next <strong>{{ c.stats.classes_to_attend }}</strong> consecutive class{{ 'es' if c.stats.classes_to_attend != 1 }} to reach {{ c.subject.min_attendance_pct|int }}%.
+      {% endif %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty card">
+  <div class="icon-tile green" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  </div>
+  <p>You're not enrolled in any subject yet.</p>
+  <a class="btn btn-primary" href="{{ url_for('enroll') }}">Enroll with a code</a>
+</div>
+{% endif %}
+{% endblock %}

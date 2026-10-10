@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Enroll in Subject{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <div class="auth-head">
+      <div class="icon-tile green" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.59 17.41A2 2 0 0 0 2 18.83V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.17a2 2 0 0 0 1.42-.59l.81-.81a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+      </div>
+      <h1>Enroll in a Subject</h1>
+      <p class="muted">Enter the join code shared by your professor.</p>
+    </div>
+    <form method="post" class="form">
+      <label>Subject join code
+        <input type="text" name="code" required autofocus placeholder="e.g. DS101" class="upper">
+      </label>
+      <button class="btn btn-primary btn-block">Enroll</button>
+    </form>
+  </div>
+
+  {% if my_subjects %}
+  <div class="card">
+    <h2 class="card-title">Your subjects</h2>
+    <ul class="plain-list">
+      {% for s in my_subjects %}
+      <li><span class="badge badge-code">{{ s.code }}</span> {{ s.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <p class="switch"><a class="back-link" href="{{ url_for('student_dashboard') }}">← Back to dashboard</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Professor' if role == 'prof' else 'Student' }} Login{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="role-tabs">
+    <a class="role-tab {{ 'active' if role == 'prof' }}" href="{{ url_for('prof_login') }}">Professor</a>
+    <a class="role-tab {{ 'active' if role == 'student' }}" href="{{ url_for('student_login') }}">Student</a>
+  </div>
+  <div class="card auth-card">
+    <div class="auth-head">
+      <div class="auth-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <h1>{{ 'Welcome back, Professor' if role == 'prof' else 'Welcome back, Student' }}</h1>
+      <p class="muted">{{ 'Sign in to manage your subjects and attendance' if role == 'prof' else 'Sign in to view your personal attendance record' }}</p>
+    </div>
+    <form method="post" class="form">
+      <label>Username
+        <input type="text" name="username" required autofocus autocomplete="username" placeholder="Enter your username">
+      </label>
+      <label>Password
+        <input type="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+      </label>
+      <button class="btn btn-primary btn-block">Sign In</button>
+    </form>
+    <p class="switch">
+      {% if role == 'prof' %}
+        New professor? <a href="{{ url_for('prof_register') }}">Create an account</a>
+      {% else %}
+        New student? <a href="{{ url_for('student_register') }}">Create an account</a>
+      {% endif %}
+    </p>
+  </div>
+</div>
+{% endblock %}

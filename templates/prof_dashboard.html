@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Professor Dashboard{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Your Subjects</h1>
+    <p class="muted">{{ subjects|length }} subject{{ 's' if subjects|length != 1 }} · logged in as {{ session.name }}</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('subject_new') }}">+ New Subject</a>
+</div>
+
+{% if subjects %}
+<div class="grid-3">
+  {% for s in subjects %}
+  <a class="card card-link subject-card" href="{{ url_for('subject_detail', subject_id=s.id) }}">
+    <div class="card-top">
+      <h2>{{ s.name }}</h2>
+      <span class="badge badge-code">{{ s.code }}</span>
+    </div>
+    <div class="meta-row">
+      <span><strong>{{ s.student_count }}</strong> student{{ 's' if s.student_count != 1 }}</span>
+      <span><strong>{{ s.session_count }}</strong> session{{ 's' if s.session_count != 1 }}</span>
+    </div>
+    <div class="meta-row">
+      <span class="badge badge-target">Target {{ s.min_attendance_pct|int }}%</span>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty card">
+  <div class="icon-tile" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10v6"/><path d="M9 13h6"/><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+  </div>
+  <p>No subjects yet. Create your first subject to start taking attendance.</p>
+  <a class="btn btn-primary" href="{{ url_for('subject_new') }}">Create Subject</a>
+</div>
+{% endif %}
+{% endblock %}

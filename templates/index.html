@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}ATTENDX — Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Attendance, <span class="grad">minus the paperwork.</span></h1>
+  <p class="sub">Professors mark only the absentees — everyone else is present by default. Students track their percentage in real time.</p>
+  <div class="role-grid">
+    <a class="role-card" href="{{ url_for('prof_login') }}">
+      <div class="icon-tile" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+      </div>
+      <h2>Professor</h2>
+      <p>Create subjects, enroll students, mark attendance in seconds.</p>
+      <span class="btn btn-primary">Professor Login →</span>
+    </a>
+    <a class="role-card" href="{{ url_for('student_login') }}">
+      <div class="icon-tile green" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+      </div>
+      <h2>Student</h2>
+      <p>See your attendance % and exactly how many classes you need.</p>
+      <span class="btn btn-secondary">Student Login →</span>
+    </a>
+  </div>
+</section>
+{% endblock %}

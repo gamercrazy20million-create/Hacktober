@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}New Subject{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <div class="auth-head">
+      <div class="icon-tile" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10v6"/><path d="M9 13h6"/><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+      </div>
+      <h1>Create Subject</h1>
+      <p class="muted">Students can enroll themselves with the join code.</p>
+    </div>
+    <form method="post" class="form">
+      <label>Subject name
+        <input type="text" name="name" required autofocus placeholder="e.g. Data Structures"
+               value="{{ form.get('name', '') if form else '' }}">
+      </label>
+      <label>Join code <span class="muted">(optional — auto-generated if blank)</span>
+        <input type="text" name="code" placeholder="e.g. DS101" maxlength="12"
+               value="{{ form.get('code', '') if form else '' }}">
+      </label>
+      <label>Required attendance %
+        <input type="number" name="min_pct" min="1" max="100" step="1" value="75" required>
+      </label>
+      <button class="btn btn-primary btn-block">Create Subject</button>
+    </form>
+    <p class="switch"><a class="back-link" href="{{ url_for('prof_dashboard') }}">← Back to dashboard</a></p>
+  </div>
+</div>
+{% endblock %}

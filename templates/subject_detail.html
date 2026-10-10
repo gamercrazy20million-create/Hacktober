@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}{{ subject.name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ subject.name }}</h1>
+    <p class="muted">
+      Join code <span class="badge badge-code">{{ subject.code }}</span>
+      · Target <span class="badge badge-target">{{ subject.min_attendance_pct|int }}%</span>
+      · {{ sessions_total }} session{{ 's' if sessions_total != 1 }} held
+    </p>
+  </div>
+  {% if today_session %}
+    <a class="btn btn-primary" href="{{ url_for('edit_session', session_id=today_session.id) }}">Edit Today's Attendance</a>
+  {% else %}
+    <a class="btn btn-primary" href="{{ url_for('mark_attendance', subject_id=subject.id) }}">Mark Today's Attendance</a>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2 class="card-title">Add student by username</h2>
+  <form method="post" action="{{ url_for('subject_add_student', subject_id=subject.id) }}" class="inline-form">
+    <input type="text" name="username" placeholder="student username" required>
+    <button class="btn btn-outline">Add</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2 class="card-title">Students</h2>
+  {% if stats %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Roll No</th><th>Attended</th><th>Attendance</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        {% for st in stats %}
+        <tr>
+          <td><strong>{{ st.name }}</strong></td>
+          <td>{{ st.roll_no }}</td>
+          <td>{{ st.attended }} / {{ st.total }}</td>
+          <td style="min-width:140px">
+            <div class="pct-wrap">
+              <div class="pct-bar"><div class="pct-fill {{ 'ok' if st.status == 'safe' else ('warn' if st.status == 'below' else 'bad') }}" style="width: {{ [st.pct, 100]|min }}%"></div></div>
+              <span class="pct-num {{ 'ok' if st.status == 'safe' else ('warn' if st.status == 'below' else 'bad') }}">{{ st.pct }}%</span>
+            </div>
+          </td>
+          <td>
+            {% if st.status == 'safe' %}
+              <span class="badge badge-ok">Safe</span>
+            {% elif st.status == 'below' %}
+              <span class="badge badge-warn">Below {{ subject.min_attendance_pct|int }}%</span>
+            {% elif st.status == 'critical' %}
+              <span class="badge badge-err">Critical</span>
+            {% else %}
+              <span class="badge">No classes</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">No students enrolled yet. Share the join code or add them by username above.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2 class="card-title">Session history</h2>
+  {% if history %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Present</th><th>Absent</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for h in history %}
+        <tr>
+          <td>{{ h.session_date }}</td>
+          <td><span class="badge badge-ok">{{ h.present_count }} present</span></td>
+          <td><span class="badge badge-err">{{ h.absent_count }} absent</span></td>
+          <td><a class="btn btn-outline btn-sm" href="{{ url_for('edit_session', session_id=h.id) }}">Edit</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">No attendance sessions yet.</p>
+  {% endif %}
+</div>
+
+<a class="back-link" href="{{ url_for('prof_dashboard') }}">← Back to dashboard</a>
+{% endblock %}

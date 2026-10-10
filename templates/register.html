@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Professor' if role == 'prof' else 'Student' }} Register{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="role-tabs">
+    <a class="role-tab {{ 'active' if role == 'prof' }}" href="{{ url_for('prof_register') }}">Professor</a>
+    <a class="role-tab {{ 'active' if role == 'student' }}" href="{{ url_for('student_register') }}">Student</a>
+  </div>
+  <div class="card auth-card">
+    <div class="auth-head">
+      <div class="auth-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      </div>
+      <h1>{{ 'Create Professor Account' if role == 'prof' else 'Create Student Account' }}</h1>
+      <p class="muted">{{ 'Set up your profile to start tracking attendance' }}</p>
+    </div>
+    <form method="post" class="form">
+      <label>Full name
+        <input type="text" name="name" required autofocus placeholder="e.g. Dr. Jane Smith">
+      </label>
+      {% if role == 'student' %}
+      <label>Roll number
+        <input type="text" name="roll_no" required placeholder="e.g. CS-21-001">
+      </label>
+      {% endif %}
+      <label>Username
+        <input type="text" name="username" required autocomplete="username" placeholder="Choose a username">
+      </label>
+      <label>Password <span class="muted">(min 4 characters)</span>
+        <input type="password" name="password" required minlength="4" autocomplete="new-password" placeholder="Choose a password">
+      </label>
+      <button class="btn btn-primary btn-block">Create Account</button>
+    </form>
+    <p class="switch">
+      Already have an account? <a href="{{ url_for('prof_login' if role == 'prof' else 'student_login') }}">Sign In</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
